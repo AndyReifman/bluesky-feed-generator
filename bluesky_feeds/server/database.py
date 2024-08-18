@@ -2,7 +2,8 @@ from datetime import datetime
 
 import peewee
 
-db = peewee.SqliteDatabase('feed_database.db')
+
+db = peewee.SqliteDatabase("feed_database.db")
 
 
 class BaseModel(peewee.Model):
@@ -15,7 +16,7 @@ class Post(BaseModel):
     cid = peewee.CharField()
     reply_parent = peewee.CharField(null=True, default=None)
     reply_root = peewee.CharField(null=True, default=None)
-    indexed_at = peewee.DateTimeField(default=datetime.utcnow)
+    indexed_at = peewee.DateTimeField(default=datetime.now)
 
 
 class SubscriptionState(BaseModel):
