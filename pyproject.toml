@@ -14,6 +14,72 @@ python-dotenv = ">=1.0.0,<1.1.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.8.0"
+mypy = "^1.10.0"
+pylint = "^2.17.1"
+pytest-cov = "^4.0.0"
+ruff = "^0.4.4"
+
+[tools.mypy]
+check_untyped_defs = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+follow_imports = "normal"
+ignore_missing_imports = true
+pretty = true
+show_column_numbers = true
+show_error_codes = true
+strict_options = true
+warn_no_return = true
+warn_redundant_cases = true
+warn_return_any = true
+warn_unused_ignores = true
+
+[tools.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
+
+[tools.ruff]
+exclude = [
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    "build",
+    "dist",
+    "docs",
+    "bluesky_feeds/__init__.py",
+    "tests/__init__.py",
+    "venv",
+]
+line-length = 100
+
+[tools.ruff.lint]
+select = [
+    "D",   # pydocstyle
+    "E",   # flake8/pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "PL",  # pylint
+    "RUF", # ruff
+    "TRY", # tryceratops
+    "UP",  # pyupgrade
+    "W",   # flake8/pydocstyle warnings
+]
+ignore = [
+    "D203", # 1 blank line required before class docstring
+    "D212", # Multi-line docstring summary should start at the first line
+]
+
+[tools.ruff.lint.isort]
+section-order [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder"
+]
 
 
 [build-system]

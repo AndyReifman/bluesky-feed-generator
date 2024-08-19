@@ -1,28 +1,39 @@
-#!/bin/sh
+#!/bin/bash -e
 
-PYTHON_EXECUTABLE=$(which python)
+THIS_DIR=`dirname $0`
+VENV_LOCATION=$THIS_DIR/.venv
 
+if [x"${VENV_LOCATION}" = xnull ] || [ x"${VENV_LOCATION}" = x"" ]; then
+  VENV_LOCATION=$THIS_DIR/.venv
+fi
 
-# Set the virtual environment name (change this if needed)
-VENV_NAME=".venv"
+PYTHON_EXECUTABLE='python3.11'
 
-# Function to create the virtual environment
-create_venv() {
-    if [ -d "$VENV_NAME" ]; then
-        echo "Deleting existing virtual environment..."
-        rm -rf "$VENV_NAME"
-    fi
-    $PYTHON_EXECUTABLE -m venv "$VENV_NAME"
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to create virtual environment!"
-        exit 1
+install_python(){
+    echo "Installing Python virtual environment to $VENV_LOCATION"
+    [ -d "$VENV_LOCATION" ] && echo "Remove previous Python's env: $VENV_LOCATION" && rm -rf $VENV_LOCATION
+    PY_LOCATION=$(which ${PYTHON_EXECUTABLE})
+    $PY_LOCATION -m venv $VENV_LOCATION
+}
+
+check_poetry() {
+    echo "Verifying Poetry installation"
+    if command -v poetry &> /dev/null ; then
+      echo "Poetry installed"
+    else
+      echo "ERROR: Poetry not installed. Please install  it."
+      exit 1
     fi
 }
 
-# Function to install project requirements
-install_requirements() {
-  poetry install
+install_packages() {
+    echo "Installing dependency packages"
+    source activate
+    pip install pip\>=20.3.4
+    poetry install --with-dev
+    echo $(pip list)
+    deactivate
 }
 
-create_venv && install_requirements
-source .venv/bin/activate
+cd $THIS_DIR
+install_python && check_poetry && install_packages
